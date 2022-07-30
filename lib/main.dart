@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:transacoes_financeiras/views/homepage.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -19,18 +20,6 @@ class _MyAppState extends State<MyApp> {
   TextEditingController depositoController = TextEditingController();
   TextEditingController saqueController = TextEditingController();
   double saldo = 0;
-
-  void depositar() {
-    setState(() {
-      saldo += double.parse(depositoController.text);
-    });
-  }
-
-  void sacar() {
-    setState(() {
-      saldo -= double.parse(saqueController.text);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,61 +46,26 @@ class _MyAppState extends State<MyApp> {
         },
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: saqueController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: "Fazer saque",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        sacar();
-                      },
-                      child: Icon(Icons.remove))
-                ],
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: depositoController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: "Fazer depósito",
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (depositoController.text != null) {
-                          depositar();
-                        }
-                      },
-                      child: Icon(Icons.add))
-                ],
-              )
-            ],
+          child: HomePage(
+            fazerDeposito: fazerDeposito,
+            fazerSaque: fazerSaque,
           ),
         ),
       ),
     );
+  }
+
+  void fazerDeposito(double deposito) {
+    setState(() {
+      if (deposito > 0) {
+        saldo += deposito;
+      }
+    });
+  }
+
+  void fazerSaque(double deposito) {
+    setState(() {
+      saldo -= deposito;
+    });
   }
 }
