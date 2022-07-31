@@ -2,37 +2,65 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:transacoes_financeiras/views/list_transacoes.dart';
 
-class HomePage extends StatelessWidget {
+import '../models/conta.dart';
+
+class HomePage extends StatefulWidget {
   HomePage({required this.fazerDeposito, required this.fazerSaque, Key? key})
       : super(key: key);
 
-  TextEditingController depositoController = TextEditingController();
-  TextEditingController saqueController = TextEditingController();
-
   Function(double) fazerDeposito;
   Function(double) fazerSaque;
-  //  double.parse(saqueController.text);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController depositoController = TextEditingController();
+
+  TextEditingController saqueController = TextEditingController();
+
+  List<Operacoes> operacoes = [];
+  //  double.parse(saqueController.text);
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 20,
+        ),
         BuildWidgetTransacao(
             controller: depositoController,
-            hintText: "Fazer Deposito",
-            transacao: fazerDeposito),
+            hintText: "Deposito",
+            transacao: widget.fazerDeposito),
         SizedBox(
           height: 20,
         ),
         BuildWidgetTransacao(
             controller: saqueController,
-            hintText: "Fazer saque",
-            transacao: fazerSaque)
+            hintText: "Saque",
+            transacao: widget.fazerSaque),
+        SizedBox(
+          height: 0,
+        ),
+        Flexible(
+          child: ListView(
+            children: [
+              for (Operacoes operacao in operacoes)
+                ListTransacoes(
+                  nome_operacao: operacao.nomeOperacao,
+                  valor_operacao: operacao.valorDaOperacao,
+                )
+            ],
+          ),
+        ),
       ],
     );
   }
 
+  //Construtores de widgets
   Widget BuildWidgetTransacao(
       {required TextEditingController controller,
       required String hintText,
@@ -41,6 +69,7 @@ class HomePage extends StatelessWidget {
       children: [
         Expanded(
           child: TextField(
+            style: TextStyle(),
             controller: controller,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -54,7 +83,22 @@ class HomePage extends StatelessWidget {
         ),
         ElevatedButton(
           onPressed: () {
+            setState(() {
+              double valor = double.parse(controller.text);
+
+              if (valor != null && hintText == "Deposito") {
+                operacoes.add(Operacoes(
+                    nomeOperacao: "Deposito", valorDaOperacao: valor));
+              } else if (valor != null && hintText == "Saque") {
+                operacoes.add(
+                    Operacoes(nomeOperacao: "Saque", valorDaOperacao: valor));
+              }
+
+              print(operacoes.toString());
+            });
+
             transacao(double.parse(controller.text));
+            controller.clear();
           },
           child: Icon(Icons.keyboard_arrow_right_outlined),
           style: ElevatedButton.styleFrom(

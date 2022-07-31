@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:transacoes_financeiras/views/homepage.dart';
+import 'package:transacoes_financeiras/views/home_page.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
           ];
         },
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           child: HomePage(
             fazerDeposito: fazerDeposito,
             fazerSaque: fazerSaque,
