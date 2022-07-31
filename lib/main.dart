@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
                 titlePadding:
                     EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 title: Text(
-                  "R\$: ${saldo}",
+                  "R\$: ${saldo.toStringAsFixed(2)}",
                   style: TextStyle(
                     fontSize: 25,
                   ),
@@ -45,10 +45,11 @@ class _MyAppState extends State<MyApp> {
           ];
         },
         body: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: HomePage(
             fazerDeposito: fazerDeposito,
             fazerSaque: fazerSaque,
+            saldo: saldo,
           ),
         ),
       ),

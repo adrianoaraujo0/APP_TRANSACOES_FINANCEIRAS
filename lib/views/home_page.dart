@@ -7,11 +7,16 @@ import 'package:transacoes_financeiras/views/list_transacoes.dart';
 import '../models/conta.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({required this.fazerDeposito, required this.fazerSaque, Key? key})
+  HomePage(
+      {required this.fazerDeposito,
+      required this.fazerSaque,
+      required this.saldo,
+      Key? key})
       : super(key: key);
 
   Function(double) fazerDeposito;
   Function(double) fazerSaque;
+  double saldo;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -83,21 +88,29 @@ class _HomePageState extends State<HomePage> {
         ),
         ElevatedButton(
           onPressed: () {
-            setState(() {
-              double valor = double.parse(controller.text);
+            double valor = double.parse(controller.text);
 
+            setState(() {
               if (valor != null && hintText == "Deposito") {
                 operacoes.add(Operacoes(
                     nomeOperacao: "Deposito", valorDaOperacao: valor));
+                transacao(double.parse(controller.text));
               } else if (valor != null && hintText == "Saque") {
-                operacoes.add(
-                    Operacoes(nomeOperacao: "Saque", valorDaOperacao: valor));
+                if (widget.saldo - valor < 0) {
+                  ScaffoldMessenger.of(context).showSnackBar(ShowSnackBar());
+                } else if (widget.saldo - valor >= 0) {
+                  print("ERRADO");
+
+                  transacao(double.parse(controller.text));
+
+                  operacoes.add(
+                      Operacoes(nomeOperacao: "Saque", valorDaOperacao: valor));
+                }
               }
 
-              print(operacoes.toString());
+              // print(operacoes.toString());
             });
 
-            transacao(double.parse(controller.text));
             controller.clear();
           },
           child: Icon(Icons.keyboard_arrow_right_outlined),
@@ -109,6 +122,27 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ],
+    );
+  }
+
+  SnackBar ShowSnackBar() {
+    return SnackBar(
+      backgroundColor: Colors.red[400],
+      action: SnackBarAction(
+        label: 'Fechar',
+        textColor: Color.fromARGB(223, 0, 0, 0),
+        onPressed: () {},
+      ),
+      content: const Text('Saldo insuficiente!'),
+      duration: const Duration(seconds: 4),
+      width: 310.0, // Width of the SnackBar.
+      padding: const EdgeInsets.symmetric(
+        horizontal: 8.0, // Inner padding for SnackBar content.
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
     );
   }
 }

@@ -47,7 +47,7 @@ class ListTransacoes extends StatelessWidget {
                       height: 8,
                     ),
                     Text(
-                      "R\$ $valor_operacao",
+                      "R\$ ${valor_operacao.toStringAsFixed(2)}",
                       style:
                           TextStyle(fontWeight: FontWeight.w500, fontSize: 18),
                     ),
