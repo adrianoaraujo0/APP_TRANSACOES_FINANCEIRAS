@@ -1,9 +1,11 @@
-class Operacoes {
-  Operacoes({required this.nomeOperacao, required this.valorDaOperacao});
-  String nomeOperacao;
-  double valorDaOperacao;
+class Conta {
+  Conta(
+      {required this.nomeConta, required this.valorConta, required this.horas});
+  String nomeConta;
+  double valorConta;
+  DateTime horas;
 
   String toString() {
-    return "nome: $nomeOperacao, valor: $valorDaOperacao";
+    return "nome: $nomeConta, valor: $valorConta";
   }
 }

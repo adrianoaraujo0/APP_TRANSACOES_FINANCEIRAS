@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   TextEditingController saqueController = TextEditingController();
 
-  List<Operacoes> operacoes = [];
+  List<Conta> contas = [];
   //  double.parse(saqueController.text);
   @override
   Widget build(BuildContext context) {
@@ -53,11 +53,13 @@ class _HomePageState extends State<HomePage> {
         Flexible(
           child: ListView(
             children: [
-              for (Operacoes operacao in operacoes)
-                ListTransacoes(
-                  nome_operacao: operacao.nomeOperacao,
-                  valor_operacao: operacao.valorDaOperacao,
-                )
+              for (int x = contas.length - 1; x >= 0; x--)
+                if (contas.length != 0)
+                  ListTransacoes(
+                    nome_conta: contas[x].nomeConta,
+                    valor_conta: contas[x].valorConta,
+                    horas: contas[x].horas,
+                  )
             ],
           ),
         ),
@@ -92,19 +94,22 @@ class _HomePageState extends State<HomePage> {
 
             setState(() {
               if (valor != null && hintText == "Deposito") {
-                operacoes.add(Operacoes(
-                    nomeOperacao: "Deposito", valorDaOperacao: valor));
+                contas.add(Conta(
+                  nomeConta: "Deposito",
+                  valorConta: valor,
+                  horas: DateTime.now(),
+                ));
                 transacao(double.parse(controller.text));
               } else if (valor != null && hintText == "Saque") {
                 if (widget.saldo - valor < 0) {
                   ScaffoldMessenger.of(context).showSnackBar(ShowSnackBar());
                 } else if (widget.saldo - valor >= 0) {
-                  print("ERRADO");
-
                   transacao(double.parse(controller.text));
 
-                  operacoes.add(
-                      Operacoes(nomeOperacao: "Saque", valorDaOperacao: valor));
+                  contas.add(Conta(
+                      nomeConta: "Saque",
+                      valorConta: valor,
+                      horas: DateTime.now()));
                 }
               }
 
